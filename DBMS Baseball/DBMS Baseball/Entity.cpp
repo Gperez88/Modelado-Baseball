@@ -79,7 +79,7 @@ void Entity::insertRow(string data[])
 		}
 
 		string row = row_ss.str();
-		row = row.substr(0,row.length()-1);
+		row = row.substr(0,row.length() -1);
 
 		outFile << row << endl;
 		outFile.close();

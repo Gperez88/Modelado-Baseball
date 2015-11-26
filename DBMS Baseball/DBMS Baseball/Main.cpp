@@ -9,8 +9,10 @@
 using namespace std;
 
 Dbms dbms;
+string a;
 
 void createTables();
+void printStructDbms();
 void inserData();
 
 int main()
@@ -18,6 +20,12 @@ int main()
 	dbms = Dbms();
 
 	createTables();
+
+	//test
+	printStructDbms();
+
+	cin >> a;
+
 
     return EXIT_SUCCESS;
 }
@@ -59,15 +67,17 @@ void createTables() {
 	playerIdPositionColumn.setType(DataType::INTEGER);
 	playerIdPositionColumn.setPrimaryKey(false);
 
+
 	vector<Column> positionColumns;
 	positionColumns.push_back(idPositionColumn);
 	positionColumns.push_back(namePositionColumn);
+	positionColumns.push_back(playerIdPositionColumn);
 
 	ForeignKey positionPlayerFK = ForeignKey();
-	positionPlayerFK.setEntityParent("position");
-	positionPlayerFK.setEntityChild("player");
-	positionPlayerFK.setColumnParent("player_id");
-	positionPlayerFK.setColumnChild("id");
+	positionPlayerFK.setEntityParent("player");
+	positionPlayerFK.setEntityChild("position");
+	positionPlayerFK.setColumnParent("id");
+	positionPlayerFK.setColumnChild("player_id");
 
 	vector<ForeignKey> positionFKs;
 	positionFKs.push_back(positionPlayerFK);
@@ -77,6 +87,38 @@ void createTables() {
 	position.setColumns(positionColumns);
 	position.setForeignKeys(positionFKs);
 	position.create();
+
+	//add tables
+	dbms.addTable(player);
+	dbms.addTable(position);
+}
+
+void printStructDbms() {
+	for (unsigned tableIndex = 0; tableIndex < dbms.getTables().size(); tableIndex++) {
+		Entity table = dbms.getTables().at(tableIndex);
+		vector<Column> columns = table.getColumns();
+		vector<ForeignKey> foreingKeys = table.getForeignKeys();
+		cout << endl << endl;
+		cout << " Tabla : " << table.getName() << endl;
+
+		if (!columns.empty()) {
+			cout << " ********** Columns *********** " << endl;
+			for (unsigned columnIndex = 0; columnIndex < columns.size(); columnIndex++) {
+				Column column = columns.at(columnIndex);
+
+				cout << " >>>> Colum: " << column.getNane() << endl;
+			}
+		}
+
+		if (!foreingKeys.empty()) {
+			cout << " ********** ForeingKeys *********** " << endl;
+			for (unsigned foreingKeyIndex = 0; foreingKeyIndex < foreingKeys.size(); foreingKeyIndex++) {
+				ForeignKey foreingKey = foreingKeys.at(foreingKeyIndex);
+
+				cout << " >>>> ForeingKey: " << foreingKey.getColumnParent() << " <> " << foreingKey.getColumnChild() << endl;
+			}
+		}
+	}
 }
 
 void inserData() {

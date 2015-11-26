@@ -2,6 +2,11 @@
 #include "stdafx.h"
 #include "Entity.h"
 
+using namespace std;
+
+const int COLUMN_ATTRIBUTE = 4;
+const int FOREING_ATTRIBUTE = 4;
+
 class Dbms
 {
 private:
@@ -10,13 +15,16 @@ private:
 	//private methods
 	vector<string> split(string str, char delimit);
 	vector<string> readFile(string pathFile);
-	Entity parserEntity(string name);
+	Entity parserEntity(string name, vector<string> columnRows, vector<string> foreingKeyRows);
+	void clearTableInMemory();
 	void init();
 public:
 	Dbms();
 	~Dbms();
 
 	//public methods
+	void addTable(Entity table);
+	void addTable(vector<Entity> tables);
 	Entity getTable(string name);
 	
 	//getters and setters
