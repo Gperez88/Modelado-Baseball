@@ -1,11 +1,39 @@
 #include "stdafx.h"
 #include "Entity.h"
 
+//contructs
+Entity::Entity()
+{
+}
+
+Entity::Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys)
+{
+	this->name = name;
+	this->columns = columns;
+	this->foreingKeys = foreingKeys;
+}
+
+Entity::~Entity()
+{
+}
+
 //private methods
+bool Entity::validate(string data[])
+{
+	int size = sizeof(data) / sizeof(*data);
+
+	if (size == columns.size()) {
+		return true;
+	}
+
+	return false;
+}
+
+//public methods
 void Entity::create()
 {
 	ofstream outFile = ofstream();
-	
+
 	//persistent table
 	outFile.open(DataSystem::TABLE, ios::app);
 	string tableName = this->name;
@@ -36,30 +64,27 @@ void Entity::create()
 	outFile.close();
 }
 
-bool Entity::validate()
-{
-	return true;
-}
-
-//contructs
-Entity::Entity()
-{
-}
-
-Entity::Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys)
-{
-	this->name = name;
-	this->columns = columns;
-	this->foreingKeys = foreingKeys;
-}
-
-Entity::~Entity()
-{
-}
-
-//public methods
 void Entity::insertRow(string data[])
 {
+	int size = sizeof(data) / sizeof(*data);
+
+	if (validate(data)) {
+		ofstream outFile = ofstream();
+		outFile.open(this->name, ios::app);
+		
+		stringstream row_ss;
+
+		for (int i = 0; i < size; i++) {
+			row_ss << data[i] << "|";
+		}
+
+		string row = row_ss.str();
+		row = row.substr(0,row.length());
+
+		outFile << row << endl;
+		outFile.close();
+	}
+
 }
 
 void Entity::insertRow(string column[], string data[])
@@ -87,7 +112,7 @@ vector<Entity> Entity::select()
 	return vector<Entity>();
 }
 
-vector<Entity> Entity::select(string column[], string data[])
+vector<Entity> Entity::select(WhereCondition whereCondition[])
 {
 	return vector<Entity>();
 }

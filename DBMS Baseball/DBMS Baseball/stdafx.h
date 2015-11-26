@@ -9,12 +9,13 @@
 
 #include <stdio.h>
 #include <tchar.h>
-#include  <io.h>
+#include <conio.h>
 #include <vector>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
+#include  <io.h>
 
 
 // TODO: reference additional headers your program requires here

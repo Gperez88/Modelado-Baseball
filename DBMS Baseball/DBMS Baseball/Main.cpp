@@ -3,14 +3,19 @@
 
 #include "stdafx.h"
 
+#include "Dbms.h"
 #include "Entity.h"
 
 using namespace std;
 
+Dbms dbms;
+
 void createTables();
+void inserData();
 
 int main()
 {
+	dbms = Dbms();
 
 	createTables();
 
@@ -21,12 +26,12 @@ void createTables() {
 	//player
 	Column idPlayerColumn = Column();
 	idPlayerColumn.setName("id");
-	idPlayerColumn.setType("INTEGER");
+	idPlayerColumn.setType(DataType::INTEGER);
 	idPlayerColumn.setPrimaryKey(true);
 
 	Column namePlayerColumn = Column();
 	namePlayerColumn.setName("name");
-	namePlayerColumn.setType("VARCHAR");
+	namePlayerColumn.setType(DataType::VARCHAR);
 	namePlayerColumn.setPrimaryKey(false);
 
 	vector<Column> playerColumns;
@@ -41,17 +46,17 @@ void createTables() {
 	//position
 	Column idPositionColumn = Column();
 	idPositionColumn.setName("id");
-	idPositionColumn.setType("INTEGER");
+	idPositionColumn.setType(DataType::INTEGER);
 	idPositionColumn.setPrimaryKey(true);
 
 	Column namePositionColumn = Column();
 	namePositionColumn.setName("name");
-	namePositionColumn.setType("VARCHAR");
+	namePositionColumn.setType(DataType::VARCHAR);
 	namePositionColumn.setPrimaryKey(false);
 
 	Column playerIdPositionColumn = Column();
 	playerIdPositionColumn.setName("player_id");
-	playerIdPositionColumn.setType("INTEGER");
+	playerIdPositionColumn.setType(DataType::INTEGER);
 	playerIdPositionColumn.setPrimaryKey(false);
 
 	vector<Column> positionColumns;
@@ -72,6 +77,10 @@ void createTables() {
 	position.setColumns(positionColumns);
 	position.setForeignKeys(positionFKs);
 	position.create();
+}
+
+void inserData() {
+	
 }
 
 

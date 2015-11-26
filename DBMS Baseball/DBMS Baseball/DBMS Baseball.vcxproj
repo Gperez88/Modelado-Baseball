@@ -146,13 +146,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Column.h" />
+    <ClInclude Include="Dbms.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="ForeignKey.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="WhereCondition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Column.cpp" />
+    <ClCompile Include="Dbms.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="ForeignKey.cpp" />
@@ -162,6 +165,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WhereCondition.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

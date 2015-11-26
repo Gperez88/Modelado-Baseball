@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Column.h"
 #include "ForeignKey.h"
+#include "WhereCondition.h"
 
 using namespace std;
 
@@ -9,6 +10,12 @@ namespace DataSystem {
 	const char TABLE[] = "table.txt";
 	const char COLUMN[] = "column.txt";
 	const char FOREIGNKEY[] = "foreingKey.txt";
+}
+
+namespace DataType {
+	const string VARCHAR = "VARCHAR";
+	const string INTEGER = "INTERGER";
+	const string DATE = "DATE";
 }
 
 class Entity
@@ -19,7 +26,7 @@ private:
 	vector<ForeignKey> foreingKeys;
 
 	//private methods
-	bool validate();
+	bool validate(string data[]);
 public:
 	Entity();
 	Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys);
@@ -34,7 +41,7 @@ public:
 	void deleteRow();
 	void deleteRow(string column[], string data[]);
 	vector<Entity> select();
-	vector<Entity> select(string column[], string data[]);
+	vector<Entity> select(WhereCondition whereCondition[]);
 
 	//getters and sertters
 	string getName();
@@ -44,4 +51,3 @@ public:
 	vector<ForeignKey> getForeignKeys();
 	void setForeignKeys(vector<ForeignKey> foreingKeys);
 };
-
