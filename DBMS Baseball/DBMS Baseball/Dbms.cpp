@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Dbms.h"
+#include "Utils.h"
 
 Dbms::Dbms()
 {
@@ -11,46 +12,6 @@ Dbms::~Dbms()
 }
 
 //private methods
-
-/***************************************************
-* Hace un split de un string y lo pasa a un vector.
-* @param str string a separar.
-* @param delimit delimitador de separacion.
-* @return vector con los elementos separados.
-****************************************************/
-vector<string> Dbms::split(string str, char delimit) {
-	vector<string> vector;
-	stringstream ss(str);
-	string tok;
-
-	while (getline(ss, tok, delimit)) {
-		vector.push_back(tok);
-	}
-
-	return vector;
-}
-
-/********************************************************
-* Lee un archivo line por linea y las mete en un vector.
-* @param pathFile ruta donde se encuentra el archivo.
-* @return vector con las lineas.
-********************************************************/
-vector<string> Dbms::readFile(string pathFile) {
-	ifstream inputFile = ifstream();
-	inputFile.open(pathFile);
-
-	vector<string> lines;
-	string line;
-
-	while (inputFile.good()) {
-		getline(inputFile, line);
-
-		if (line != "")
-			lines.push_back(line);
-	}
-
-	return lines;
-}
 
 /**********************************************************************
 * Parsea un string y transforma en una entidad(tabla).
@@ -67,7 +28,7 @@ Entity Dbms::parserEntity(string name, vector<string> columnRows, vector<string>
 
 
 	for (unsigned columnIndex = 0; columnIndex < columnRows.size(); columnIndex++){
-		vector<string> attributeColumn = split(columnRows.at(columnIndex), '|');
+		vector<string> attributeColumn = Utils::split(columnRows.at(columnIndex), '|');
 
 		if (attributeColumn.size() == COLUMN_ATTRIBUTE) {
 			Column column;
@@ -85,7 +46,7 @@ Entity Dbms::parserEntity(string name, vector<string> columnRows, vector<string>
 	}
 
 	for (unsigned foreingIndex = 0; foreingIndex < foreingKeyRows.size(); foreingIndex++) {
-		vector<string> attributeForeingKey = split(foreingKeyRows.at(foreingIndex), '|');
+		vector<string> attributeForeingKey = Utils::split(foreingKeyRows.at(foreingIndex), '|');
 
 		if (attributeForeingKey.size() == FOREING_ATTRIBUTE) {
 			ForeignKey foreingKey;
@@ -127,9 +88,9 @@ void Dbms::init()
 {
 	vector<Entity> tables;
 
-	vector<string> tableRows = readFile(DataSystem::TABLE);
-	vector<string> columnRows = readFile(DataSystem::COLUMN);
-	vector<string> foreingKeyRows = readFile(DataSystem::FOREIGNKEY);
+	vector<string> tableRows = Utils::readFile(DataSystem::TABLE);
+	vector<string> columnRows = Utils::readFile(DataSystem::COLUMN);
+	vector<string> foreingKeyRows = Utils::readFile(DataSystem::FOREIGNKEY);
 
 	for (unsigned tableIndex = 0; tableIndex < tableRows.size(); tableIndex++) {
 		string tableName = tableRows.at(tableIndex);
@@ -139,7 +100,7 @@ void Dbms::init()
 
 		for (unsigned columnIndex = 0; columnIndex < columnRows.size(); columnIndex++) {
 			string row = columnRows.at(columnIndex);
-			vector<string> attributeColumn = split(row, '|');
+			vector<string> attributeColumn = Utils::split(row, '|');
 			string columnTableName = attributeColumn.at(0);
 
 			if (columnTableName == tableName) {
@@ -155,7 +116,7 @@ void Dbms::init()
 
 		for (unsigned foreingIndex = 0; foreingIndex < foreingKeyRows.size(); foreingIndex++) {
 			string foringKeyRow = foreingKeyRows.at(foreingIndex);
-			vector<string> attributeForeing = split(foringKeyRow, '|');
+			vector<string> attributeForeing = Utils::split(foringKeyRow, '|');
 			string parentTableName = attributeForeing.at(0);
 
 			if (parentTableName == tableName) {

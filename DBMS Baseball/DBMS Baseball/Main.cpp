@@ -88,9 +88,21 @@ void createTables() {
 	position.setForeignKeys(positionFKs);
 	position.create();
 
-	//add tables
-	dbms.addTable(player);
-	dbms.addTable(position);
+	//add table player
+	if(player.getErrorMessage().length() == 0){
+		dbms.addTable(player);
+	}
+	else {
+		cout << player.getErrorMessage() << endl;
+	}
+
+	//add table position
+	if (position.getErrorMessage().length() == 0) {
+		dbms.addTable(position);
+	}
+	else {
+		cout << position.getErrorMessage() << endl;
+	}
 }
 
 void printStructDbms() {

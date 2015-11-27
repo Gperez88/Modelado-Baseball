@@ -25,8 +25,11 @@ private:
 	vector<Column> columns;
 	vector<ForeignKey> foreingKeys;
 
+	string errorMessage;
+
 	//private methods
-	bool validate(string data[]);
+	bool validateDataSystem();
+	bool validateDataPersistent(string data[]);
 public:
 	Entity();
 	Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys);
@@ -50,4 +53,6 @@ public:
 	void setColumns(vector<Column> columns);
 	vector<ForeignKey> getForeignKeys();
 	void setForeignKeys(vector<ForeignKey> foreingKeys);
+
+	string getErrorMessage();
 };

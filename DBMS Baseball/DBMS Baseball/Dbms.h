@@ -13,8 +13,6 @@ private:
 	vector<Entity> tables;
 
 	//private methods
-	vector<string> split(string str, char delimit);
-	vector<string> readFile(string pathFile);
 	Entity parserEntity(string name, vector<string> columnRows, vector<string> foreingKeyRows);
 	void clearTableInMemory();
 	void init();

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Entity.h"
+#include "Utils.h"
 
 //contructs
 Entity::Entity()
@@ -18,20 +19,45 @@ Entity::~Entity()
 }
 
 //private methods
-bool Entity::validate(string data[])
+bool Entity::validateDataSystem()
+{
+	vector<string> tableRows = Utils::readFile(DataSystem::TABLE);
+
+	for (unsigned tableIndex = 0; tableIndex < tableRows.size(); tableIndex++) {
+		string tableName = tableRows.at(tableIndex);
+
+		if (this->name == tableName) {
+			stringstream ss;
+			ss << "Intenta agregar una tabla llamada '" << this->name << "' que ya existe en el sistema.";
+
+			errorMessage = ss.str();
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Entity::validateDataPersistent(string data[])
 {
 	int size = sizeof(data) / sizeof(*data);
 
-	if (size == columns.size()) {
-		return true;
+	if (size != columns.size()) {
+		return false;
 	}
 
-	return false;
+	return true;
 }
 
 //public methods
 void Entity::create()
 {
+	//valid data system
+	if (!validateDataSystem()) {
+		return;
+	}
+
 	ofstream outFile = ofstream();
 
 	//persistent table
@@ -68,7 +94,7 @@ void Entity::insertRow(string data[])
 {
 	int size = sizeof(data) / sizeof(*data);
 
-	if (validate(data)) {
+	if (validateDataPersistent(data)) {
 		ofstream outFile = ofstream();
 		outFile.open(this->name, ios::app);
 		
@@ -146,4 +172,9 @@ vector<ForeignKey> Entity::getForeignKeys()
 void Entity::setForeignKeys(vector<ForeignKey> foreingKeys)
 {
 	this->foreingKeys = foreingKeys;
+}
+
+string Entity::getErrorMessage()
+{
+	return errorMessage;
 }
