@@ -30,7 +30,7 @@ private:
 
 	//private methods
 	bool validateDataSystem();
-	bool validateDataPersistent(string data[]);
+	bool validateDataPersistent(vector<string> data);
 public:
 	Entity();
 	Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys);
@@ -38,7 +38,7 @@ public:
 
 	//public methods
 	void create();
-	void insertRow(string data[]);
+	void insertRow(vector<string> data);
 	void insertRow(string column[],string data[]);
 	void updateRow(string data[]);
 	void updateRow(string column[], string data[]);

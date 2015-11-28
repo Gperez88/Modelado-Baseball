@@ -12,6 +12,7 @@
 #include <conio.h>
 #include <vector>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <sstream>
 #include <fstream>

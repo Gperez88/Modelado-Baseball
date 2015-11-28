@@ -26,6 +26,9 @@ int main()
 	//test
 	printStructDbms();
 
+	//insert
+	inserData();
+
 	cin >> a;
 
 
@@ -136,7 +139,14 @@ void printStructDbms() {
 }
 
 void inserData() {
-	
+	Entity player = dbms.getTable("player");
+	Entity position = dbms.getTable("position");
+
+	vector<string> playerData = { "1","Gabriel-Perez" };
+	player.insertRow(playerData);
+
+	vector<string> positionData = {"1","Jardinero-Central","1"};
+	position.insertRow(positionData);
 }
 
 

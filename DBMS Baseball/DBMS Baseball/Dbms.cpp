@@ -163,6 +163,13 @@ void Dbms::addTable(Entity table)
 
 Entity Dbms::getTable(string name)
 {
+	for (unsigned tableIndex = 0; tableIndex < this->tables.size(); tableIndex++) {
+		Entity table = tables.at(tableIndex);
+		if (table.getName() == name) {
+			return table;
+		}
+	}
+
 	return Entity();
 }
 
