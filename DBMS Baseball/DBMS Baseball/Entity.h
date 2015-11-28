@@ -15,6 +15,7 @@ namespace DataSystem {
 namespace DataType {
 	const string VARCHAR = "VARCHAR";
 	const string INTEGER = "INTERGER";
+	const string DECIMAL = "DECIMAL";
 	const string DATE = "DATE";
 }
 

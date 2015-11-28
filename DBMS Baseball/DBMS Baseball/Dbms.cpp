@@ -56,7 +56,7 @@ Entity Dbms::parserEntity(string name, vector<string> columnRows, vector<string>
 			string columnParent = attributeForeingKey.at(2);
 			string columnChild = attributeForeingKey.at(3);
 
-			foreingKey.setColumnParent(entityParent);
+			foreingKey.setEntityParent(entityParent);
 			foreingKey.setEntityChild(entityChild);
 			foreingKey.setColumnParent(columnParent);
 			foreingKey.setColumnChild(columnChild);
@@ -71,6 +71,7 @@ Entity Dbms::parserEntity(string name, vector<string> columnRows, vector<string>
 
 	return entity;
 }
+
 /*****************************************************
 * Limpia el vector de tablas para inicializar el dbms.
 ******************************************************/
@@ -107,24 +108,24 @@ void Dbms::init()
 				columns.push_back(columnRows.at(columnIndex));
 				
 				//remove row.
-				vector<string>::iterator itColumn = find(columnRows.begin(), columnRows.end(), row);
-				columnRows.erase(itColumn);
+				columnRows = Utils::removeItem<string>(columnRows,row);
+				
 				//descremento el indice ya que se borro un row.
 				columnIndex--;
 			}
 		}
 
 		for (unsigned foreingIndex = 0; foreingIndex < foreingKeyRows.size(); foreingIndex++) {
-			string foringKeyRow = foreingKeyRows.at(foreingIndex);
-			vector<string> attributeForeing = Utils::split(foringKeyRow, '|');
-			string parentTableName = attributeForeing.at(0);
+			string foreingKeyRow = foreingKeyRows.at(foreingIndex);
+			vector<string> attributeForeing = Utils::split(foreingKeyRow, '|');
+			string foreingKeyTableName = attributeForeing.at(1);
 
-			if (parentTableName == tableName) {
-				foreingKey.push_back(foringKeyRow);
+			if (foreingKeyTableName == tableName) {
+				foreingKey.push_back(foreingKeyRow);
 
 				//remove row.
-				vector<string>::iterator itForeingKey = find(foreingKeyRows.begin(), foreingKeyRows.end(), foringKeyRow);
-				foreingKeyRows.erase(itForeingKey);
+				foreingKeyRows = Utils::removeItem<string>(foreingKeyRows, foreingKeyRow);
+
 				//descremento el indice ya que se borro un row.
 				foreingIndex--;
 			}
@@ -137,7 +138,6 @@ void Dbms::init()
 	//set all tables
 	this->setTables(tables);
 }
-
 
 //public methods
 

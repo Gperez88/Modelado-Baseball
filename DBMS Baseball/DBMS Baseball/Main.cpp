@@ -19,6 +19,8 @@ int main()
 {
 	dbms = Dbms();
 
+	cout << "Corre Corre" << endl;
+
 	createTables();
 
 	//test
@@ -127,7 +129,7 @@ void printStructDbms() {
 			for (unsigned foreingKeyIndex = 0; foreingKeyIndex < foreingKeys.size(); foreingKeyIndex++) {
 				ForeignKey foreingKey = foreingKeys.at(foreingKeyIndex);
 
-				cout << " >>>> ForeingKey: " << foreingKey.getColumnParent() << " <> " << foreingKey.getColumnChild() << endl;
+				cout << " >>>> ForeingKey: " << foreingKey.getColumnChild() << " <> " << foreingKey.getEntityParent() << "." << foreingKey.getColumnParent() << endl;
 			}
 		}
 	}
