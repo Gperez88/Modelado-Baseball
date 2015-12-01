@@ -15,7 +15,7 @@ public:
 	virtual ~Column();
 
 	//getters and setters
-	string getNane();
+	string getName();
 	void setName(string name);
 	string getType();
 	void setType(string type);

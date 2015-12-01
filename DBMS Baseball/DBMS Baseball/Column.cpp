@@ -16,7 +16,7 @@ Column::~Column()
 {
 }
 
-string Column::getNane()
+string Column::getName()
 {
 	return name;
 }

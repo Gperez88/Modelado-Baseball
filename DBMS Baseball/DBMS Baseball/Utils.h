@@ -61,4 +61,19 @@ public:
 		
 		return collection;
 	}
+
+	template<class T>
+	static vector<T> inline sortCollection(vector<T> collection) {
+		for (unsigned i = 1; i < collection.size(); i++) {
+			for (unsigned j = 0; j < collection.size() - 1; j++) {
+				if (collection.at(j) > collection.at(j + 1)) {
+					T temp = collection.at(j);
+					collection.at(j) == collection.at(j + 1);
+					collection.at(j + 1) == temp;
+				}
+			}
+		}
+
+		return collection;
+	}
 };

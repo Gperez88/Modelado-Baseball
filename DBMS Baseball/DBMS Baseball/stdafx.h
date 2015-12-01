@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <conio.h>
+#include <algorithm>
 #include <vector>
 #include <iostream>
 #include <iterator>

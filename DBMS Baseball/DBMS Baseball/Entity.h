@@ -44,8 +44,8 @@ public:
 	void updateRow(string column[], string data[]);
 	void deleteRow();
 	void deleteRow(string column[], string data[]);
-	vector<Entity> select();
-	vector<Entity> select(WhereCondition whereCondition[]);
+	void select();
+	void select(WhereCondition whereCondition[]);
 
 	//getters and sertters
 	string getName();

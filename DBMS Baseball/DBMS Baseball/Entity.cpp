@@ -67,7 +67,7 @@ void Entity::create()
 	//persistent column
 	outFile.open(DataSystem::COLUMN, ios::app);
 	for (unsigned i = 0; i < columns.size(); i++) {
-		string columnName = columns.at(i).getNane();
+		string columnName = columns.at(i).getName();
 		string columnType = columns.at(i).getType();
 		bool isColumnPrimaryKey = columns.at(i).getPrimaryKey();
 
@@ -92,11 +92,11 @@ void Entity::insertRow(vector<string> data)
 {
 	if (validateDataPersistent(data)) {
 		ofstream outFile = ofstream();
-		outFile.open(this->name, ios::app);
+		outFile.open(this->name + ".txt", ios::app);
 		
 		stringstream row_ss;
 
-		for (int i = 0; i < data.size(); i++) {
+		for (unsigned i = 0; i < data.size(); i++) {
 			row_ss << data.at(i) << "|";
 		}
 
@@ -129,14 +129,28 @@ void Entity::deleteRow(string column[], string data[])
 {
 }
 
-vector<Entity> Entity::select()
+void Entity::select()
 {
-	return vector<Entity>();
+	stringstream outSelect;
+	vector<string> columnRows = Utils::readFile(this->name + ".txt");
+
+	for (unsigned index = 0; index < columnRows.size(); index++) {
+		vector<string> data = Utils::split(columnRows.at(index), '|');
+			
+		for (unsigned dataIndex = 0; dataIndex < data.size(); dataIndex++) {
+			outSelect << columns.at(dataIndex).getName() << " : " << data.at(dataIndex) << endl;
+		}
+
+		outSelect << endl;
+	}
+
+	cout << outSelect.str();
 }
 
-vector<Entity> Entity::select(WhereCondition whereCondition[])
+void Entity::select(WhereCondition whereCondition[])
 {
-	return vector<Entity>();
+	vector<string> columnRows = Utils::readFile(this->name + ".txt");
+
 }
 
 //getters and setters

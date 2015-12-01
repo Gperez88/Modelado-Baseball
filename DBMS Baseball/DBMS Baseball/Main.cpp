@@ -14,12 +14,11 @@ string a;
 void createTables();
 void printStructDbms();
 void inserData();
+void select();
 
 int main()
 {
 	dbms = Dbms();
-
-	cout << "Corre Corre" << endl;
 
 	createTables();
 
@@ -28,6 +27,9 @@ int main()
 
 	//insert
 	inserData();
+
+	//select *
+	select();
 
 	cin >> a;
 
@@ -123,7 +125,7 @@ void printStructDbms() {
 			for (unsigned columnIndex = 0; columnIndex < columns.size(); columnIndex++) {
 				Column column = columns.at(columnIndex);
 
-				cout << " >>>> Colum: " << column.getNane() << endl;
+				cout << " >>>> Colum: " << column.getName() << endl;
 			}
 		}
 
@@ -142,11 +144,19 @@ void inserData() {
 	Entity player = dbms.getTable("player");
 	Entity position = dbms.getTable("position");
 
-	vector<string> playerData = { "1","Gabriel-Perez" };
+	vector<string> playerData = { "1","Gabriel Perez" };
 	player.insertRow(playerData);
 
-	vector<string> positionData = {"1","Jardinero-Central","1"};
+	vector<string> positionData = {"1","Jardinero Central","1"};
 	position.insertRow(positionData);
+}
+
+void select() {
+	Entity player = dbms.getTable("player");
+	Entity position = dbms.getTable("position");
+
+	player.select();
+	position.select();
 }
 
 
