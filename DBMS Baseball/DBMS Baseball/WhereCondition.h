@@ -16,6 +16,7 @@ private:
 	string operatorCondition;
 public:
 	WhereCondition();
+	WhereCondition(string column,string value,string operatorCondition);
 	~WhereCondition();
 
 	//getter and setters

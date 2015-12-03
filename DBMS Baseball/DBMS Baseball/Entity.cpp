@@ -2,25 +2,27 @@
 #include "Entity.h"
 #include "Utils.h"
 
-//contructs
-Entity::Entity()
-{
+
+// contructs
+Entity::Entity() {
 }
 
-Entity::Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys)
-{
+Entity::Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys) {
 	this->name = name;
 	this->columns = columns;
 	this->foreingKeys = foreingKeys;
 }
 
-Entity::~Entity()
-{
+Entity::~Entity() {
 }
 
-//private methods
-bool Entity::validateDataSystem()
-{
+
+// private methods
+
+/***************************************************
+* Valida que la tabla no exista en el sistema.
+****************************************************/
+bool Entity::validateDataSystem() {
 	vector<string> tableRows = Utils::readFile(DataSystem::TABLE);
 
 	for (unsigned tableIndex = 0; tableIndex < tableRows.size(); tableIndex++) {
@@ -30,27 +32,106 @@ bool Entity::validateDataSystem()
 			stringstream ss;
 			ss << "Intenta agregar una tabla llamada '" << this->name << "' que ya existe en el sistema.";
 
-			errorMessage = ss.str();
+			this->errorMessage = ss.str();
 
+			this->entityValid = false;
 			return false;
 		}
 	}
 
+	this->entityValid = true;
 	return true;
 }
 
-bool Entity::validateDataPersistent(vector<string> data)
-{
-	if (data.size() != columns.size()) {
+/***************************************************
+* Valida la integridad de los datos al persistirlo.
+* @param columns vector de las columnas.
+* @param data vector de los datos a persistir.
+* @return true si la validacion paso bien.
+****************************************************/
+bool Entity::validateDataPersistent(vector<string> columns, vector<string> data) {
+	// valido que se especifiquen todos los atributos de la tabla, ya que es un insert all.
+	if (columns.size() == 0 && data.size() != this->columns.size()) {
+		return false;
+	}
+
+	// valido que tanto las columnas como los atributos especificado concuerden en cantidad.
+	if (columns.size() > 0 && data.size() != columns.size()) {
+		return false;
+	}
+
+	//valido los tipos de datos.
+	if (!validateDataType(columns, data)) {
+		return false;
+	}
+
+	string primaryKey = data.at(0);
+
+	//valido si ya existe un registro con ese primary key.
+	if (validatePrimaryKeyExist(primaryKey)) {
 		return false;
 	}
 
 	return true;
 }
 
-//public methods
-void Entity::create()
-{
+/***************************************************
+* Valida el tipo de datos de las columnas.
+* @param columns vector de las columnas.
+* @param data vector de los datos a persistir.
+* @return true si la validacion paso bien.
+****************************************************/
+bool Entity::validateDataType(vector<string> columns, vector<string> data) {
+	return true;
+}
+
+/***************************************************
+* Valida si la llame primaria ya existe en la tabla.
+* @param primaryKey nombre de la llame primaria.
+* @return true si la validacion paso bien.
+****************************************************/
+bool Entity::validatePrimaryKeyExist(string primaryKey) {
+	vector<string> rows = Utils::readFile(this->name + ".txt");
+
+	for (unsigned index = 0; index < rows.size(); index++) {
+		string row = rows.at(index);
+		vector<string> dataColumns = Utils::split(row,'|');
+
+		if (dataColumns.at(0) == primaryKey) {
+			stringstream ss;
+			ss << "Intenta agregar una llave primaria '" << primaryKey << "' que ya existe en la tabla '" << this->name << "'.";
+
+			this->errorMessage = ss.str();
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/***************************************************
+* Valida si la columna es primary key.
+* @param columnName nombre de la columna.
+* @return true si la validacion paso bien.
+****************************************************/
+bool Entity::isPrimaryKey(string columnName) {
+	for (unsigned indexColumn = 0; indexColumn < columns.size(); indexColumn++) {
+		Column column = columns.at(indexColumn);
+		if (column.getName() == columnName) {
+			return column.isPrimaryKey();
+		}
+	}
+	return false;
+}
+
+
+// public methods
+
+/***************************************************
+* Crea la entidad o tabla.
+****************************************************/
+void Entity::create() {
 	//valid data system
 	if (!validateDataSystem()) {
 		return;
@@ -69,7 +150,7 @@ void Entity::create()
 	for (unsigned i = 0; i < columns.size(); i++) {
 		string columnName = columns.at(i).getName();
 		string columnType = columns.at(i).getType();
-		bool isColumnPrimaryKey = columns.at(i).getPrimaryKey();
+		bool isColumnPrimaryKey = columns.at(i).isPrimaryKey();
 
 		outFile << tableName << "|" << columnName << "|" << columnType << "|" << isColumnPrimaryKey << endl;
 	}
@@ -88,9 +169,15 @@ void Entity::create()
 	outFile.close();
 }
 
-void Entity::insertRow(vector<string> data)
-{
-	if (validateDataPersistent(data)) {
+/*******************************************************
+* Inserta un row con todos sus datos.
+* @param data vector que contiene los datos a insertar.
+********************************************************/
+void Entity::insertRow(vector<string> data) {
+	//TODO: mejorar mas adelante.
+	vector<string> columns;
+
+	if (validateDataPersistent(columns, data)) {
 		ofstream outFile = ofstream();
 		outFile.open(this->name + ".txt", ios::app);
 		
@@ -109,28 +196,75 @@ void Entity::insertRow(vector<string> data)
 
 }
 
-void Entity::insertRow(string column[], string data[])
-{
+/*******************************************************
+* Inserta un row con los datos especificados.
+* @param column vector que contiene las columnas a insertar.
+* @param data vector que contiene los datos a insertar.
+********************************************************/
+void Entity::insertRow(vector<string> columns, vector<string> data) {
+
+	if (validateDataPersistent(columns, data)) {
+		ofstream outFile = ofstream();
+		outFile.open(this->name + ".txt", ios::app);
+
+		stringstream row_ss;
+
+		for (unsigned indexColumnLocal = 0; indexColumnLocal < this->columns.size(); indexColumnLocal++){
+			string columnNameLocal = this->columns.at(indexColumnLocal).getName();
+			int index = -1;
+
+			for (unsigned indexColumn = 0; indexColumn < columns.size(); indexColumn++) {
+				string column = columns.at(indexColumn);
+
+				if (columnNameLocal == columns.at(indexColumn)) {
+					index = indexColumn;
+				}
+			}
+
+			if (index > -1) {
+				row_ss << data.at(index) << "|";
+			}
+			else {
+				row_ss << "null|";
+			}
+		}
+		
+		string row = row_ss.str();
+		row = row.substr(0, row.length() - 1);
+
+		outFile << row << endl;
+		outFile.close();
+	}
 }
 
-void Entity::updateRow(string data[])
-{
+/*******************************************************
+* Actualiza todos los row de una tabla.
+* @param column vector que contiene las columnas a actualizar.
+* @param data vector que contiene los datos a actualizar.
+********************************************************/
+void Entity::updateRow(vector<string> columns, vector<string> data) {
+
 }
 
-void Entity::updateRow(string column[], string data[])
-{
+/*******************************************************
+* Actualiza los row especificados de una tabla.
+* @param column vector que contiene las columnas a actualizar.
+* @param data vector que contiene los datos a actualizar.
+* @param whereCondition vector que contiene las condiciones por la que se van a actualizar.
+********************************************************/
+void Entity::updateRow(string column[], string data[], vector<WhereCondition> whereCondition){
 }
 
-void Entity::deleteRow()
-{
+void Entity::deleteRow(){
+
 }
 
-void Entity::deleteRow(string column[], string data[])
-{
+void Entity::deleteRow(string column[], string data[]){
+
 }
 
-void Entity::select()
-{
+void Entity::select(){
+
 	stringstream outSelect;
 	vector<string> columnRows = Utils::readFile(this->name + ".txt");
 
@@ -144,47 +278,84 @@ void Entity::select()
 		outSelect << endl;
 	}
 
-	cout << outSelect.str();
+	std::cout << outSelect.str();
 }
 
-void Entity::select(WhereCondition whereCondition[])
-{
+void Entity::select(vector<string> columns, vector<WhereCondition> whereConditions) {
+	stringstream outSelect;
 	vector<string> columnRows = Utils::readFile(this->name + ".txt");
+
+	for (unsigned index = 0; index < columnRows.size(); index++) {
+		vector<string> data = Utils::split(columnRows.at(index), '|');
+
+		for (unsigned dataIndex = 0; dataIndex < data.size(); dataIndex++) {
+			Column columnLocal = this->columns.at(dataIndex);
+			string dataLocal = data.at(dataIndex);
+
+			bool condition = true;
+			int index = -1;
+
+			for (unsigned indexCondition = 0; indexCondition < whereConditions.size(); indexCondition++) {
+				WhereCondition whereCondition = whereConditions.at(indexCondition);
+				
+				if (whereCondition.getColumn() == columnLocal.getName() && whereCondition.getValue() == dataLocal) {
+
+					for (unsigned indexColumn = 0; indexColumn < columns.size(); indexColumn++) {
+						string column = columns.at(indexColumn);
+
+						if (columnLocal.getName() == columns.at(indexColumn)) {
+							index = dataIndex;
+							break;
+						}
+					}
+				}
+				else {
+					condition = false;
+				}
+			}
+
+			if (condition) {
+				outSelect << columns.at(index) << " : " << data.at(dataIndex) << endl;
+			}
+		}
+		outSelect << endl;
+	}
+
+	std::cout << outSelect.str();
+
+
 
 }
 
 //getters and setters
-string Entity::getName()
-{
+string Entity::getName() {
 	return name;
 }
 
-void Entity::setName(string name)
-{
+void Entity::setName(string name) {
 	this->name = name;
 }
 
-vector<Column> Entity::getColumns()
-{
+vector<Column> Entity::getColumns() {
 	return columns;
 }
 
-void Entity::setColumns(vector<Column> columns)
-{
+void Entity::setColumns(vector<Column> columns) {
 	this->columns = columns;
 }
 
-vector<ForeignKey> Entity::getForeignKeys()
-{
+vector<ForeignKey> Entity::getForeignKeys() {
 	return foreingKeys;
 }
 
-void Entity::setForeignKeys(vector<ForeignKey> foreingKeys)
-{
+void Entity::setForeignKeys(vector<ForeignKey> foreingKeys) {
 	this->foreingKeys = foreingKeys;
 }
 
-string Entity::getErrorMessage()
-{
+string Entity::getErrorMessage() {
 	return errorMessage;
+}
+
+bool Entity::isValid() {
+	return entityValid;
 }

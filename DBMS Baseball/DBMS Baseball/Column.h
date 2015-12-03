@@ -19,7 +19,7 @@ public:
 	void setName(string name);
 	string getType();
 	void setType(string type);
-	bool getPrimaryKey();
+	bool isPrimaryKey();
 	void setPrimaryKey(bool primaryKey);
 };
 

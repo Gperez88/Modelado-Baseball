@@ -36,7 +36,7 @@ void Column::setType(string type)
 	this->type = type;
 }
 
-bool Column::getPrimaryKey()
+bool Column::isPrimaryKey()
 {
 	return primaryKey;
 }

@@ -2,13 +2,11 @@
 #include "Dbms.h"
 #include "Utils.h"
 
-Dbms::Dbms()
-{
+Dbms::Dbms() {
 	this->init();
 }
 
-Dbms::~Dbms()
-{
+Dbms::~Dbms() {
 }
 
 //private methods
@@ -85,8 +83,7 @@ void Dbms::clearTableInMemory()
 /**********************************************************
 * Inicializa la estructrura de tablas y cargarla en el dbms.
 ***********************************************************/
-void Dbms::init()
-{
+void Dbms::init() {
 	vector<Entity> tables;
 
 	vector<string> tableRows = Utils::readFile(DataSystem::TABLE);
@@ -145,8 +142,7 @@ void Dbms::init()
 * Agrega tablas al dbms.
 * @param tables tablas a agregar.
 *********************************/
-void Dbms::addTable(vector<Entity> tables)
-{
+void Dbms::addTable(vector<Entity> tables) {
 	for (unsigned tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
 		addTable(tables.at(tableIndex));
 	}
@@ -156,13 +152,18 @@ void Dbms::addTable(vector<Entity> tables)
 * Agrega tabla al dbms.
 * @param table tabla a agregar.
 ********************************/
-void Dbms::addTable(Entity table)
-{
-	tables.push_back(table);
+void Dbms::addTable(Entity table) {
+	if(table.isValid()){
+		tables.push_back(table);
+	}
 }
 
-Entity Dbms::getTable(string name)
-{
+/********************************
+* Obtiene una tabla por su nombre.
+* @param name nombre de la tabla.
+* @return retorna una tabla o entidad.
+********************************/
+Entity Dbms::getTable(string name) {
 	for (unsigned tableIndex = 0; tableIndex < this->tables.size(); tableIndex++) {
 		Entity table = tables.at(tableIndex);
 		if (table.getName() == name) {
@@ -173,13 +174,13 @@ Entity Dbms::getTable(string name)
 	return Entity();
 }
 
-vector<Entity> Dbms::getTables()
-{
+
+//getters and setters
+vector<Entity> Dbms::getTables() {
 	return tables;
 }
 
-void Dbms::setTables(vector<Entity> tables)
-{
+void Dbms::setTables(vector<Entity> tables) {
 	this->tables = tables;
 
 }

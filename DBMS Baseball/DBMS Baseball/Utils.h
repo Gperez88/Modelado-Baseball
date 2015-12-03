@@ -56,7 +56,7 @@ public:
 	********************************************************/
 	template<class T>
 	static vector<T> inline removeItem(vector<T> collection, T criteria) {
-		vector<string>::iterator itItem = find(collection.begin(), collection.end(), criteria);
+		vector<T>::iterator itItem = find(collection.begin(), collection.end(), criteria);
 		collection.erase(itItem);
 		
 		return collection;

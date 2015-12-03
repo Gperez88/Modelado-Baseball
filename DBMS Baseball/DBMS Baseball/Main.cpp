@@ -15,6 +15,8 @@ void createTables();
 void printStructDbms();
 void inserData();
 void select();
+void selectCondition();
+void printError();
 
 int main()
 {
@@ -29,7 +31,10 @@ int main()
 	inserData();
 
 	//select *
-	select();
+	//select();
+
+	//select condition
+	selectCondition();
 
 	cin >> a;
 
@@ -96,20 +101,17 @@ void createTables() {
 	position.create();
 
 	//add table player
-	if(player.getErrorMessage().length() == 0){
-		dbms.addTable(player);
-	}
-	else {
-		cout << player.getErrorMessage() << endl;
-	}
-
+	dbms.addTable(player);
+	
 	//add table position
-	if (position.getErrorMessage().length() == 0) {
-		dbms.addTable(position);
-	}
-	else {
+	dbms.addTable(position);
+
+	//print errors.
+	if (player.getErrorMessage().length() > 0)
+		cout << player.getErrorMessage() << endl;
+
+	if (position.getErrorMessage().length() > 0)
 		cout << position.getErrorMessage() << endl;
-	}
 }
 
 void printStructDbms() {
@@ -147,8 +149,19 @@ void inserData() {
 	vector<string> playerData = { "1","Gabriel Perez" };
 	player.insertRow(playerData);
 
+	vector<string> playerColumn2 = { "id" };
+	vector<string> playerData2 = { "2" };
+	player.insertRow(playerColumn2, playerData2);
+
 	vector<string> positionData = {"1","Jardinero Central","1"};
 	position.insertRow(positionData);
+
+	//print errors.
+	if (player.getErrorMessage().length() > 0)
+		cout << player.getErrorMessage() << endl;
+
+	if (position.getErrorMessage().length() > 0)
+		cout << position.getErrorMessage() << endl;
 }
 
 void select() {
@@ -159,5 +172,12 @@ void select() {
 	position.select();
 }
 
+void selectCondition() {
+	Entity player = dbms.getTable("player");
 
+	vector<string> columns = { "id","name" };
+	vector<WhereCondition> whereConditions = {WhereCondition("id","2",Operator::AND )};
+
+	player.select(columns, whereConditions);
+}
 

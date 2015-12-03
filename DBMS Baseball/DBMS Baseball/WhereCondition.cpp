@@ -6,6 +6,13 @@ WhereCondition::WhereCondition()
 {
 }
 
+WhereCondition::WhereCondition(string column, string value, string operatorCondition)
+{
+	this->column = column;
+	this->value = value;
+	this->operatorCondition = operatorCondition;
+}
+
 
 WhereCondition::~WhereCondition()
 {
@@ -13,7 +20,7 @@ WhereCondition::~WhereCondition()
 
 string WhereCondition::getColumn()
 {
-	return operatorCondition;
+	return column;
 }
 
 void WhereCondition::setColumn(string column)
