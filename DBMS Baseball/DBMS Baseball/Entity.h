@@ -44,10 +44,8 @@ public:
 	void create();
 	void insertRow(vector<string> data);
 	void insertRow(vector<string> columns, vector<string> data);
-	void updateRow(vector<string> columns, vector<string> data);
 	void updateRow(string column[], string data[], vector<WhereCondition> whereCondition);
-	void deleteRow();
-	void deleteRow(string column[], string data[]);
+	void deleteRow(string column[], string data[], vector<WhereCondition> whereCondition);
 	void select();
 	void select(vector<string> columns, vector<WhereCondition> whereCondition);
 

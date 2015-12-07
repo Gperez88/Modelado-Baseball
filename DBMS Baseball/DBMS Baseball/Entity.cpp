@@ -238,31 +238,28 @@ void Entity::insertRow(vector<string> columns, vector<string> data) {
 }
 
 /*******************************************************
-* Actualiza todos los row de una tabla.
-* @param column vector que contiene las columnas a actualizar.
-* @param data vector que contiene los datos a actualizar.
-********************************************************/
-void Entity::updateRow(vector<string> columns, vector<string> data) {
-
-}
-
-/*******************************************************
 * Actualiza los row especificados de una tabla.
 * @param column vector que contiene las columnas a actualizar.
 * @param data vector que contiene los datos a actualizar.
 * @param whereCondition vector que contiene las condiciones por la que se van a actualizar.
 ********************************************************/
 void Entity::updateRow(string column[], string data[], vector<WhereCondition> whereCondition){
+	//TODO: aun sin implementar.
 }
 
-void Entity::deleteRow(){
-
+/*******************************************************
+* Elimina los row especificados de una tabla.
+* @param column vector que contiene las columnas a eliminar.
+* @param data vector que contiene los datos a eliminar.
+* @param whereCondition vector que contiene las condiciones por la que se van a eliminar.
+********************************************************/
+void Entity::deleteRow(string column[], string data[], vector<WhereCondition> whereCondition){
+	//TODO: aun sin implementar.
 }
 
-void Entity::deleteRow(string column[], string data[]){
-
-}
-
+/***************************************************
+* Trae toda la data de una entidad (Select * from entidad).
+****************************************************/
 void Entity::select(){
 
 	stringstream outSelect;
@@ -281,6 +278,11 @@ void Entity::select(){
 	std::cout << outSelect.str();
 }
 
+/***************************************************
+* Trae la data que cumpla con la condicion.
+* @param columns columnas a mostrar.
+* @param whereConditions condiciones.
+****************************************************/
 void Entity::select(vector<string> columns, vector<WhereCondition> whereConditions) {
 	stringstream outSelect;
 	vector<string> columnRows = Utils::readFile(this->name + ".txt");
@@ -292,32 +294,35 @@ void Entity::select(vector<string> columns, vector<WhereCondition> whereConditio
 			Column columnLocal = this->columns.at(dataIndex);
 			string dataLocal = data.at(dataIndex);
 
-			bool condition = true;
+			bool condition = false;
 			int index = -1;
 
 			for (unsigned indexCondition = 0; indexCondition < whereConditions.size(); indexCondition++) {
 				WhereCondition whereCondition = whereConditions.at(indexCondition);
-				
+
 				if (whereCondition.getColumn() == columnLocal.getName() && whereCondition.getValue() == dataLocal) {
+					condition = true;
+					break;
+				}
+			}
+
+			if(condition){
+				for (unsigned indexColumnLocal = 0; indexColumnLocal < this->columns.size();indexColumnLocal++){
+					string columnLocalName = this->columns.at(indexColumnLocal).getName();
 
 					for (unsigned indexColumn = 0; indexColumn < columns.size(); indexColumn++) {
-						string column = columns.at(indexColumn);
+						string columnName = columns.at(indexColumn);
 
-						if (columnLocal.getName() == columns.at(indexColumn)) {
+						if (columnLocalName == columnName) {
 							index = dataIndex;
+							outSelect << columnName << " : " << data.at(indexColumnLocal) << endl;
 							break;
 						}
 					}
 				}
-				else {
-					condition = false;
-				}
-			}
-
-			if (condition) {
-				outSelect << columns.at(index) << " : " << data.at(dataIndex) << endl;
-			}
+			}		
 		}
+
 		outSelect << endl;
 	}
 

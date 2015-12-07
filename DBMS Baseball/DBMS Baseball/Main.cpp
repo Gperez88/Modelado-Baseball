@@ -22,13 +22,13 @@ int main()
 {
 	dbms = Dbms();
 
-	createTables();
+	//createTables();
 
 	//test
-	printStructDbms();
+	//printStructDbms();
 
 	//insert
-	inserData();
+	//inserData();
 
 	//select *
 	//select();
@@ -176,7 +176,7 @@ void selectCondition() {
 	Entity player = dbms.getTable("player");
 
 	vector<string> columns = { "id","name" };
-	vector<WhereCondition> whereConditions = {WhereCondition("id","2",Operator::AND )};
+	vector<WhereCondition> whereConditions = {WhereCondition("id","1",Operator::AND )};
 
 	player.select(columns, whereConditions);
 }
