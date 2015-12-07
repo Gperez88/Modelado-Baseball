@@ -37,6 +37,7 @@ private:
 	bool isPrimaryKey(string columnName);
 public:
 	Entity();
+	Entity(string name, vector<Column> columns);
 	Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys);
 	virtual ~Entity();
 

@@ -9,7 +9,6 @@
 using namespace std;
 
 Dbms dbms;
-string a;
 
 void createTables();
 void printStructDbms();
@@ -34,84 +33,64 @@ int main()
 	//select();
 
 	//select condition
-	selectCondition();
+	//selectCondition();
 
-	cin >> a;
-
+	system("pause");
 
     return EXIT_SUCCESS;
 }
 
 void createTables() {
-	//player
-	Column idPlayerColumn = Column();
-	idPlayerColumn.setName("id");
-	idPlayerColumn.setType(DataType::INTEGER);
-	idPlayerColumn.setPrimaryKey(true);
+	//estadio
+	Column estadioId = Column("estadioId", DataType::INTEGER, true);
+	Column estadioNombre = Column("estadioNombre", DataType::VARCHAR, false);
+	Column estatioFechaInaguracion = Column("estadioFechaInaguracion", DataType::DATE, false);
 
-	Column namePlayerColumn = Column();
-	namePlayerColumn.setName("name");
-	namePlayerColumn.setType(DataType::VARCHAR);
-	namePlayerColumn.setPrimaryKey(false);
+	vector<Column> estadioColumnas;
+	estadioColumnas.push_back(estadioId);
+	estadioColumnas.push_back(estadioNombre);
+	estadioColumnas.push_back(estatioFechaInaguracion);
 
-	vector<Column> playerColumns;
-	playerColumns.push_back(idPlayerColumn);
-	playerColumns.push_back(namePlayerColumn);
+	Entity estadio = Entity("Estadio", estadioColumnas);
 
-	Entity player = Entity();
-	player.setName("player");
-	player.setColumns(playerColumns);
-	player.create();
+	//equipo
+	Column equipoId = Column("equipoId", DataType::INTEGER, true);
+	Column equipoNombre = Column("equipoNombre", DataType::VARCHAR, false);
+	Column equipoFechaInaguracion = Column("equipoFechaInaguracion", DataType::DATE, false);
+	Column equipoCantidadJuegadores = Column("equipoNombre", DataType::INTEGER, false);
 
-	//position
-	Column idPositionColumn = Column();
-	idPositionColumn.setName("id");
-	idPositionColumn.setType(DataType::INTEGER);
-	idPositionColumn.setPrimaryKey(true);
+	vector<Column> equipoColumnas;
+	equipoColumnas.push_back(equipoId);
+	equipoColumnas.push_back(equipoNombre);
+	equipoColumnas.push_back(equipoFechaInaguracion);
+	equipoColumnas.push_back(equipoCantidadJuegadores);
 
-	Column namePositionColumn = Column();
-	namePositionColumn.setName("name");
-	namePositionColumn.setType(DataType::VARCHAR);
-	namePositionColumn.setPrimaryKey(false);
+	Entity equipo = Entity("Equipo", equipoColumnas);
 
-	Column playerIdPositionColumn = Column();
-	playerIdPositionColumn.setName("player_id");
-	playerIdPositionColumn.setType(DataType::INTEGER);
-	playerIdPositionColumn.setPrimaryKey(false);
+	//juego
+	Column juegoId = Column("juegoId", DataType::INTEGER, true);
+	Column juegoEstadioId = Column("estadioId", DataType::INTEGER, false);
+	Column juegoFecha = Column("juegoFecha", DataType::DATE, false);
+	Column equipoHome = Column("equipoHome", DataType::INTEGER, false);
+	Column equipoVisitante = Column("equipoVisitante", DataType::INTEGER, false);
 
+	vector<Column> juegoColumnas;
+	juegoColumnas.push_back(juegoId);
+	juegoColumnas.push_back(juegoEstadioId);
+	juegoColumnas.push_back(juegoFecha);
+	juegoColumnas.push_back(equipoHome);
+	juegoColumnas.push_back(equipoVisitante);
 
-	vector<Column> positionColumns;
-	positionColumns.push_back(idPositionColumn);
-	positionColumns.push_back(namePositionColumn);
-	positionColumns.push_back(playerIdPositionColumn);
+	ForeignKey juegoEstadioFK = ForeignKey("Estadio","Juego","id","estadioId");
+	ForeignKey juegoEquiHomeFK = ForeignKey("Equipo", "Juego", "id", "equipoHome");
+	ForeignKey juegoEquiVisitanteFK = ForeignKey("Equipo", "Juego", "id", "equipoVisitante");
 
-	ForeignKey positionPlayerFK = ForeignKey();
-	positionPlayerFK.setEntityParent("player");
-	positionPlayerFK.setEntityChild("position");
-	positionPlayerFK.setColumnParent("id");
-	positionPlayerFK.setColumnChild("player_id");
-
-	vector<ForeignKey> positionFKs;
-	positionFKs.push_back(positionPlayerFK);
-
-	Entity position = Entity();
-	position.setName("position");
-	position.setColumns(positionColumns);
-	position.setForeignKeys(positionFKs);
-	position.create();
-
-	//add table player
-	dbms.addTable(player);
+	vector<ForeignKey> juegoFKs;
+	juegoFKs.push_back(juegoEstadioFK);
+	juegoFKs.push_back(juegoEquiHomeFK);
+	juegoFKs.push_back(juegoEquiVisitanteFK);
 	
-	//add table position
-	dbms.addTable(position);
-
-	//print errors.
-	if (player.getErrorMessage().length() > 0)
-		cout << player.getErrorMessage() << endl;
-
-	if (position.getErrorMessage().length() > 0)
-		cout << position.getErrorMessage() << endl;
+	Entity juego = Entity("Juego", juegoColumnas, juegoFKs);
 }
 
 void printStructDbms() {

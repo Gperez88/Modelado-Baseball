@@ -7,6 +7,11 @@
 Entity::Entity() {
 }
 
+Entity::Entity(string name, vector<Column> columns) {
+	this->name = name;
+	this->columns = columns;
+}
+
 Entity::Entity(string name, vector<Column> columns, vector<ForeignKey> foreingKeys) {
 	this->name = name;
 	this->columns = columns;
