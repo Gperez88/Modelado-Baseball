@@ -21,10 +21,10 @@ int main()
 {
 	dbms = Dbms();
 
-	//createTables();
+	createTables();
 
 	//test
-	//printStructDbms();
+	printStructDbms();
 
 	//insert
 	//inserData();
@@ -91,6 +91,83 @@ void createTables() {
 	juegoFKs.push_back(juegoEquiVisitanteFK);
 	
 	Entity juego = Entity("Juego", juegoColumnas, juegoFKs);
+
+	//entrada
+	Column entradaId = Column("entradaId", DataType::INTEGER, true);
+	Column descripcionEntrada = Column("descripcionEntrada", DataType::VARCHAR, false);
+	Column entradaJuegoId = Column("entradaJuegoId", DataType::INTEGER, false);
+
+	vector<Column> entradaColumnas;
+	entradaColumnas.push_back(entradaId);
+	entradaColumnas.push_back(descripcionEntrada);
+
+	ForeignKey entradaJuegoFK = ForeignKey("Juego","Entrada","id","entradaJuegoId");
+
+	vector<ForeignKey> entradaFks;
+	entradaFks.push_back(entradaJuegoFK);
+
+	Entity entrada = Entity("Entrada", entradaColumnas, entradaFks);
+
+	//jugador
+	Column juegadorId = Column("juegadorId", DataType::INTEGER, true);
+	Column jugadorNombre = Column("jugadorNombre", DataType::VARCHAR, false);
+	Column jugadorApellido = Column("jugadorApellido", DataType::VARCHAR, false);
+	Column jugadorEdad = Column("jugadorEdad", DataType::INTEGER, false);
+	Column jugadorEquipoId = Column("jugadorEquipoId", DataType::INTEGER, false);
+
+	vector<Column> jugadorColumnas;
+	jugadorColumnas.push_back(juegadorId);
+	jugadorColumnas.push_back(jugadorNombre);
+	jugadorColumnas.push_back(jugadorApellido);
+	jugadorColumnas.push_back(jugadorEdad);
+	jugadorColumnas.push_back(jugadorEquipoId);
+
+	ForeignKey jugadorEquipoFK = ForeignKey("Equipo", "Jugador", "id", "jugadorEquipoId");
+
+	vector<ForeignKey> jugadorFks;
+	jugadorFks.push_back(jugadorEquipoFK);
+
+	Entity jugador = Entity("Jugador", jugadorColumnas, jugadorFks);
+
+	//puesto
+	Column puestoId = Column("puestoId", DataType::INTEGER, true);
+	Column puestoNombre = Column("puestoNombre", DataType::VARCHAR, false);
+
+	vector<Column> puestoColumnas;
+	puestoColumnas.push_back(puestoId);
+	puestoColumnas.push_back(puestoNombre);
+
+	Entity puesto = Entity("Puesto", puestoColumnas);
+
+	//juegadorPuesto
+	Column jugadorPuestoId = Column("jugadorPuestoId", DataType::INTEGER, true);
+	Column jugadorPuestoJugadorId = Column("jugadorPuestoJugadorId", DataType::INTEGER, false);
+	Column jugadorPuestoPuestoId = Column("jugadorPuestoPuestoId", DataType::VARCHAR, false);
+
+	vector<Column> jugadorPuestoColumnas;
+	jugadorPuestoColumnas.push_back(jugadorPuestoId);
+	jugadorPuestoColumnas.push_back(jugadorPuestoJugadorId);
+	jugadorPuestoColumnas.push_back(jugadorPuestoPuestoId);
+
+	ForeignKey jugadorPuestoJugadorFK = ForeignKey("Juego", "JugadorPuesto", "id", "jugadorPuestoJugadorId");
+	ForeignKey jugadorPuestoPuestoFK = ForeignKey("Puesto", "JugadorPuesto", "id", "jugadorPuestoPuestoId");
+
+	vector<ForeignKey> jugadorPuestoFks;
+	jugadorPuestoFks.push_back(jugadorPuestoJugadorFK);
+	jugadorPuestoFks.push_back(jugadorPuestoPuestoFK);
+
+	Entity jugadorPuesto = Entity("JugadorPuesto", jugadorPuestoColumnas, jugadorPuestoFks);
+
+	vector<Entity> entities;
+	entities.push_back(estadio);
+	entities.push_back(equipo);
+	entities.push_back(juego);
+	entities.push_back(entrada);
+	entities.push_back(jugador);
+	entities.push_back(puesto);
+	entities.push_back(jugadorPuesto);
+
+	dbms.addTable(entities);
 }
 
 void printStructDbms() {
