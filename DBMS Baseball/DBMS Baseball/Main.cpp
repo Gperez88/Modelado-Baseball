@@ -27,7 +27,7 @@ int main()
 	printStructDbms();
 
 	//insert
-	//inserData();
+	inserData();
 
 	//select *
 	//select();
@@ -57,7 +57,7 @@ void createTables() {
 	Column equipoId = Column("equipoId", DataType::INTEGER, true);
 	Column equipoNombre = Column("equipoNombre", DataType::VARCHAR, false);
 	Column equipoFechaInaguracion = Column("equipoFechaInaguracion", DataType::DATE, false);
-	Column equipoCantidadJuegadores = Column("equipoNombre", DataType::INTEGER, false);
+	Column equipoCantidadJuegadores = Column("equipoCantidadJuegadores", DataType::INTEGER, false);
 
 	vector<Column> equipoColumnas;
 	equipoColumnas.push_back(equipoId);
@@ -142,7 +142,7 @@ void createTables() {
 	//juegadorPuesto
 	Column jugadorPuestoId = Column("jugadorPuestoId", DataType::INTEGER, true);
 	Column jugadorPuestoJugadorId = Column("jugadorPuestoJugadorId", DataType::INTEGER, false);
-	Column jugadorPuestoPuestoId = Column("jugadorPuestoPuestoId", DataType::VARCHAR, false);
+	Column jugadorPuestoPuestoId = Column("jugadorPuestoPuestoId", DataType::INTEGER, false);
 
 	vector<Column> jugadorPuestoColumnas;
 	jugadorPuestoColumnas.push_back(jugadorPuestoId);
@@ -250,25 +250,39 @@ void printStructDbms() {
 }
 
 void inserData() {
-	Entity player = dbms.getTable("player");
-	Entity position = dbms.getTable("position");
+	Entity estadio = dbms.getTable("Estadio");
+	Entity equipo = dbms.getTable("Equipo");
+	Entity juego = dbms.getTable("Juego");
+	Entity entrada = dbms.getTable("Entrada");
+	Entity jugador = dbms.getTable("Jugador");
 
-	vector<string> playerData = { "1","Gabriel Perez" };
-	player.insertRow(playerData);
+	vector<string> estadioData = { "1","Tetelo Varga","01-03-1998"};
+	estadio.insertRow(estadioData);
 
-	vector<string> playerColumn2 = { "id" };
-	vector<string> playerData2 = { "2" };
-	player.insertRow(playerColumn2, playerData2);
+	vector<string> equipoData = {"1","Licey","01-02-1930","20"};
+	equipo.insertRow(equipoData);
 
-	vector<string> positionData = {"1","Jardinero Central","1"};
-	position.insertRow(positionData);
+	equipoData = { "2","Aguilas","01-02-1940","20" };
+	equipo.insertRow(equipoData);
 
+	vector<string> juegoData = {"1","1","01-01-2015","1","2"};
+	juego.insertRow(juegoData);
+
+	vector<string> entradaData = {"1","Una entrada"};
+	entrada.insertRow(entradaData);
+
+	vector<string> jugadorData = { "1","Gabriel","Perez","27","1" };
+	jugador.insertRow(jugadorData);
+
+	jugadorData = { "2","Moquete","Perez","25","2" };
+	jugador.insertRow(jugadorData);
+	
 	//print errors.
-	if (player.getErrorMessage().length() > 0)
-		cout << player.getErrorMessage() << endl;
+	//if (player.getErrorMessage().length() > 0)
+	//	cout << player.getErrorMessage() << endl;
 
-	if (position.getErrorMessage().length() > 0)
-		cout << position.getErrorMessage() << endl;
+	//if (position.getErrorMessage().length() > 0)
+	//	cout << position.getErrorMessage() << endl;
 }
 
 void select() {
