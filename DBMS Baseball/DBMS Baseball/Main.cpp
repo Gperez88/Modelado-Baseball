@@ -255,20 +255,22 @@ void inserData() {
 	Entity juego = dbms.getTable("Juego");
 	Entity entrada = dbms.getTable("Entrada");
 	Entity jugador = dbms.getTable("Jugador");
+	Entity puesto = dbms.getTable("Puesto");
+	Entity jugadorPuesto = dbms.getTable("JugadorPuesto");
 
-	vector<string> estadioData = { "1","Tetelo Varga","01-03-1998"};
+	vector<string> estadioData = { "1","Tetelo Varga","01-03-1998" };
 	estadio.insertRow(estadioData);
 
-	vector<string> equipoData = {"1","Licey","01-02-1930","20"};
+	vector<string> equipoData = { "1","Licey","01-02-1930","20" };
 	equipo.insertRow(equipoData);
 
 	equipoData = { "2","Aguilas","01-02-1940","20" };
 	equipo.insertRow(equipoData);
 
-	vector<string> juegoData = {"1","1","01-01-2015","1","2"};
+	vector<string> juegoData = { "1","1","01-01-2015","1","2" };
 	juego.insertRow(juegoData);
 
-	vector<string> entradaData = {"1","Una entrada"};
+	vector<string> entradaData = { "1","Una entrada" };
 	entrada.insertRow(entradaData);
 
 	vector<string> jugadorData = { "1","Gabriel","Perez","27","1" };
@@ -276,6 +278,18 @@ void inserData() {
 
 	jugadorData = { "2","Moquete","Perez","25","2" };
 	jugador.insertRow(jugadorData);
+
+	vector<string> puestoData = { "1","Pitcher" };
+	puesto.insertRow(puestoData);
+
+	puestoData = { "2","Bateador" };
+	puesto.insertRow(puestoData);
+
+	vector<string> jugadorPuestoData = { "1","1" ,"2" };
+	jugadorPuesto.insertRow(jugadorPuestoData);
+
+	jugadorPuestoData = { "2","2" ,"1" };
+	jugadorPuesto.insertRow(jugadorPuestoData);
 	
 	//print errors.
 	//if (player.getErrorMessage().length() > 0)
