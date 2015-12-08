@@ -153,7 +153,7 @@ void Dbms::addTable(vector<Entity> tables) {
 * @param table tabla a agregar.
 ********************************/
 void Dbms::addTable(Entity table) {
-	//crea la tabla
+	//crea la tabla.
 	table.create();
 
 	//si es valida la agrega al dbms.

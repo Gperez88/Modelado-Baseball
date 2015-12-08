@@ -158,6 +158,54 @@ void createTables() {
 
 	Entity jugadorPuesto = Entity("JugadorPuesto", jugadorPuestoColumnas, jugadorPuestoFks);
 
+	//turno
+	Column turnoId = Column("turnoId", DataType::INTEGER, true);
+	Column turnoEntradaId = Column("turnoEntradaId", DataType::INTEGER, false);
+	
+	vector<Column> turnoColumnas;
+	turnoColumnas.push_back(turnoId);
+	turnoColumnas.push_back(turnoEntradaId);
+
+	Entity turno = Entity("Turno", turnoColumnas);
+
+	//lanzamiento
+	Column lanzamientoId = Column("lanzamientoId", DataType::INTEGER, true);
+	Column lanzamientoTurnoId = Column("lanzamientoTurnoId", DataType::INTEGER, false);
+	Column lanzamientoPitcherId = Column("lanzamientoPitcherId", DataType::INTEGER, false);
+
+	vector<Column> lanzamientoColumnas;
+	lanzamientoColumnas.push_back(lanzamientoId);
+	lanzamientoColumnas.push_back(lanzamientoTurnoId);
+	lanzamientoColumnas.push_back(lanzamientoPitcherId);
+
+	ForeignKey lanzamientoJugadorFk = ForeignKey("Jugador", "Lanzamiento", "id", "lanzamientoPitcherId");
+
+	vector<ForeignKey> lanzamientoFks;
+	lanzamientoFks.push_back(lanzamientoJugadorFk);
+
+	Entity lanzamiento = Entity("Lanzamiento", lanzamientoColumnas, lanzamientoFks);
+
+	//carrera
+	Column carreraId = Column("carreraId", DataType::INTEGER, true);
+	Column carreraJugadorId = Column("carreraJugadorId", DataType::INTEGER, false);
+	Column carreraTurnoId = Column("carreraTurnoId", DataType::INTEGER, false);
+
+	vector<Column> carreraColumnas;
+	carreraColumnas.push_back(carreraId);
+	carreraColumnas.push_back(carreraJugadorId);
+	carreraColumnas.push_back(carreraTurnoId);
+
+	ForeignKey carreraJugadorFk = ForeignKey("Jugador", "Carrera", "id", "carreraJugadorId");
+	ForeignKey carreraTurnoFk = ForeignKey("Turno", "Carrera", "id", "carreraTurnoId");
+
+
+	vector<ForeignKey> carreraFks;
+	carreraFks.push_back(carreraJugadorFk);
+	carreraFks.push_back(carreraTurnoFk);
+
+	Entity carrera = Entity("Carrera", carreraColumnas, carreraFks);
+
+	//tablas
 	vector<Entity> entities;
 	entities.push_back(estadio);
 	entities.push_back(equipo);
@@ -166,6 +214,9 @@ void createTables() {
 	entities.push_back(jugador);
 	entities.push_back(puesto);
 	entities.push_back(jugadorPuesto);
+	entities.push_back(turno);
+	entities.push_back(lanzamiento);
+	entities.push_back(carrera);
 
 	dbms.addTable(entities);
 }
